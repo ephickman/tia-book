@@ -1,0 +1,23 @@
+steps:
+- name: gcr.io/cloud-builders/go
+  args: ["test"]
+  env: ["PROJECT_ROOT=tia-ch7"]
+
+- name: gcr.io/cloud-builders/docker
+  args: ["build","-t","us-docker.pkg.dev/tia-ch7/tia-ch7/tia-ch7","."]
+
+- name: gcr.io/cloud-builders/docker
+  args: ["push","us-docker.pkg.dev/tia-ch7/tia-ch7/tia-ch7"]
+
+- name: gcr.io/cloud-builders/gcloud
+  args:
+  - run
+  - deploy
+  - tia-ch7
+  - --image
+  - us-docker.pkg.dev/tia-ch7/tia-ch7/tia-ch7
+  - --region
+  - us-central1
+  - --platform
+  - managed
+  - -q
